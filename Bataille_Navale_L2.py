@@ -1,19 +1,17 @@
-#Samuel Alvarez
-#Louis Bibal
+#Noms: ALVAREZ Samuel Bibal Louis
+#Projet informatique: Bataille Navale
 #
-#Projet Baraille Navale
-#L2 MIASH Panthéon Sorbonne
-#
-
-import random
+#16 décembre 2021
+#L2 MIASHS Panthéon Sorbonne
  
+import random
+
 #Constantes projet
 #dimension du plateau de jeu NxN
 N=10
 COLONNES=[str(i) for i in range(N)]
 LIGNES = [' '] + list(map(chr, range(97, 107)))
 DICT_LIGNES_INT = {LIGNES[i]:i-1 for i in range(len(LIGNES))}
- 
 #case pas attaquée
 VIDE = '.'
 #case attaquée sans bateau
@@ -75,6 +73,7 @@ def tir_basique(m,pos):
  
     return False
  
+ 
 #Partie 1.4
 def random_position ():
    letter = chr (random.randint(97, 97+N-1))
@@ -87,7 +86,9 @@ def random_position ():
  
  
 #Partie 1.6
-def pos_from_string(s):  
+def pos_from_string(s):
+#initialisation de pos en tant que tuple vide
+    pos = tuple()  
    
     if len(s)==3:  #3 car on a une lettre un espace et un chiffre
         s=s.split()
@@ -99,14 +100,8 @@ def pos_from_string(s):
            # la différence entre le code ascii de s[0] et 97 donnera le premier élément du tuple
            pos=(NLettre,Nombre)
         else:
-           #initialisation de pos en tant que tuple vide
-           pos = tuple()
            print ("Format invalide veuillez saisir une autre position: ",s)
            print ("Position: Ecrivez une lettre minuscule entre a et j, puis mettre un espace, puis ecrivez un chiffre entre 0 et 9")
-    else:
-        pos = tuple()
-        print ("Format invalide veuillez saisir une autre position: ",s)
-        print ("Position: Ecrivez une lettre minuscule entre a et j, puis mettre un espace, puis ecrivez un chiffre entre 0 et 9")
  
     return pos
  
@@ -251,9 +246,9 @@ def input_ajout_bateau(flotte,nom,taille):
 #puisque nouveau_bateau retourne True c'est que le bateau a été ajouté
 #alors on teste si nouveau_bateau a bien fonctionné
  
+
 #Partie 2.5
 def input_ajout_bateau_ia(flotte,nom,taille):
- 
    print ("Ajout du bateau ", nom," taille ", taille)
    while True:
 #generation au hasard d un couple de position (letttre nombre)
@@ -277,6 +272,7 @@ def input_ajout_bateau_ia(flotte,nom,taille):
            if nouveau_bateau(flotte,nom,taille,pos,orientation)==True:
                break
  
+
 #Partie 2.6
 def init_joueur():
    flotte=[]
@@ -288,7 +284,8 @@ def init_joueur():
         input_ajout_bateau(flotte,nomdubateau,tailledubateau)
  
    return flotte
- 
+
+
 #Partie 2.7
 def init_joueur_ia():
    flotteia=[]
@@ -299,7 +296,8 @@ def init_joueur_ia():
         input_ajout_bateau_ia(flotteia,nomdubateau,tailledubateau)
  
    return flotteia
- 
+
+
 #Fonctions Partie 3
 #Partie 3.1
 def tir (pos,m,flotte):
@@ -323,12 +321,12 @@ def tir (pos,m,flotte):
             tirstatus = True  #le tir a été effectué
 #on contrôle que le rang du bateau retourné est valide
             if index is not None:
-            #on incremente le champ "cases touchées"
+            #on incremente la valeur de la clé "cases touchées"
             #case touchées est au final comme la jauge de vie du bateau
                flotte [index]["cases touchées"] = flotte [index]["cases touchées"] + 1
                if flotte [index]["cases touchées"] == flotte [index]["taille"]:
-            #si les cases touchées d'un bateau par des tirs successifs vaut sa taille
-            #cela signifit qu'il a été détruit
+            #si à la suite du tir la valeur de "cases touchées" est égale à la taille
+            #cela signifit que le bateau a été détruit
                    print ("Bateau ----->",flotte [index]["nom"],"COULE !")
                    for inpos in flotte [index]["positions"]:
                        #controle de la validite de inpos [0] et inpos [1] pour ne pas sortir de m
@@ -344,34 +342,33 @@ def tir (pos,m,flotte):
  
 #on retourne le status du tir True si il a été fait False sinon
     return tirstatus
- 
+
+
 #Partie 3.2
 def id_bateau_at_pos(pos,flotte):
-#la variable 'indice' correspond  au rang dans la liste flotte du bateau a la position 'pos'
-# on passe en revu toute la flotte en incrementant indice jusqu a trouve le bateau qui matche
-#la position pos donnee en argument   
+#on passe en revue toute les positions de chaque bateau avec inpos
+#si aucune correspondance n'est trouvée on incrémente rang de +1
+#En revanche si on trouve une position d'un bateau qui est la même que celle donnée en argument
+#on retourne la varianble rang qui est le rang du bateau dans la liste flotte
    rang = 0
    for bateau in flotte:
        for inpos in bateau["positions"]:
         if pos[0] == inpos [0] and pos[1] == inpos [1]:
            return rang
        rang = rang + 1
- 
    return None
- 
+
+
 #FONCTION: Test_Partie_2_et3
 def Test_Partie_2_et3():
     print ("Debut tests parties 2 et 3\n")
-   
     grille1 =[]
     grille1=create_grid()
     print ("Grille initiale")
     plot_grid(grille1)
-   
-    print("Resultat de la function pos_from_string pour la posotion b 4\n", pos_from_string("b 4"))
+    print("Resultat de la fonction pos_from_string pour la posotion b 4\n", pos_from_string("b 4"))
 #on cree une nouvelle flotte
     flotte=[]
-   
 #test bateau dont la position initiale depasse la grille verticalement
     print("Bateau place hors grille verticalement")
     print("Resultat de la function nouveau_bateau: ",nouveau_bateau(flotte,"Test",3,(10,0),'v'))
@@ -379,22 +376,19 @@ def Test_Partie_2_et3():
     print("Le bateau n a pas ete ajoute a la flotte et la grille est vide")
     print (flotte)
     plot_flotte_grid(grille1,flotte)
-   
-#test bateau dont la position initiale depasse la grille hoorizontalement
+#test bateau dont la position initiale dépasse la grille hoorizontalement
     print("Bateau place hors grille horizontalement")
     print("Resultat de la function nouveau_bateau: ",nouveau_bateau(flotte,"Test",3,(0,10),'h'))
-#bateau n'est pas ajoute a la flotte
+#bateau n'est pas ajouté a la flotte
     print("Le bateau n a pas ete ajoute a la flotte et la grille est vide")
     print (flotte)
     plot_flotte_grid(grille1,flotte)
-   
 #on test un bateau avec une bonne position initiale mais qui depasse horizontalement
     print("Bateau qui depasse de la grille grille horizontalement")
     print("Resultat de la function nouveau_bateau: ",nouveau_bateau(flotte,"Test",3,(0,8),'h'))
     print("Le bateau n a pas ete ajoute a la flotte et la grille est vide")
     print (flotte)
     plot_flotte_grid(grille1,flotte)
-   
     print ("Placement de trois bateaux aux positions:\n 5;0 H taille 3\n 0;0 H taille 3\n 5;4 V taille 3\n")
     print("Resultat de la function nouveau_bateau pour le premier bateau: ",nouveau_bateau(flotte,"Test",3,(5,0),'h'))
     print("Resultat de la function nouveau_bateau pour le deuxieme bateau: ",nouveau_bateau(flotte,"Vogues Merry",3,(0,0),"h"))
@@ -402,51 +396,38 @@ def Test_Partie_2_et3():
     print("Les bateaux ont ete ajoutes a la flotte et la grille n est pas vide")
     print (flotte)
     plot_flotte_grid(grille1,flotte)
-   
     print ("Test de la presence d un bateau sur la position 0;1\n")
     pos=(0,1)
     if presence_bateau((0,1),flotte):
         print ("Un bateau est place sur la position: ", pos,"\n")
     else:
         print ("Pas de bateau sur la position: ",pos,"\n")
-   
     input("\nTapez n'importe qu'elle touche pour continuer")
-#    
-#on cree une nouvelle flotte et le joueur va placer les bateaux et faire quelques tirs
-#
+#on créé une nouvelle flotte et le joueur va placer les bateaux et faire quelques tirs
     grille2=create_grid()
     plot_grid(grille2)
- 
     print("Vous allez placer votre flotte\n")
     flotte = init_joueur()
     print("Ceci est la flotte entree\n")
     print (flotte)
     print("\nCeci est son placement sur la grille")
     plot_flotte_grid(grille2,flotte)
- 
     nbtir = 10
     print ("Test de la fonction tir - ",nbtir,"tirs peuvent etre fait\n")
     test=0
-   
     while True:
         if test==nbtir:
             break
-       
         print ("Position: Ecrivez une lettre minuscule entre a et j, puis mettre un espace, puis ecrivez un chiffre entre 0 et 9")
         a=str(input("Choisir une position: "))
-       
         pos=pos_from_string(a)
         b=tir(pos,grille2,flotte)
-       
         if b==False:
             print("Position déjà attaquée ou tir invalide")
-      
         plot_grid(grille2)
         test+=1
- 
-#on cree une nouvelle flotte et ia va placer automatiquement les bateaux
-#puis declencher un nombre de tirs qui sera demande
- 
+#on créé une nouvelle flotte et l'ia va placer automatiquement les bateaux
+#puis déclencher un nombre de tirs qui sera demandé
     print ("\nIA va placer automatiquement les bateaux\n")
     input("Tapez n'importe qu'elle touche pour continuer")
  
@@ -456,17 +437,14 @@ def Test_Partie_2_et3():
     print ("Flotte IA et grille de depart\n")
     print (flotte_ia)
     plot_flotte_grid(grille3,flotte_ia)
-   
-#on demande  l utilisateur de rentrer un nombre sous forme de chaine et on control que cette chaine
+#on demande à l'utilisateur de rentrer un nombre sous forme de chaine et on contrôle que cette chaine
 #represente bien un nombre sinon on redemande
     while True:
         tirinput = str(input ("\nEntrer le nombre de tirs au hasard a declencher : "))
         if tirinput.isdigit():
             tirmax = int(tirinput)
             break
- 
     go = 0
-   
     while True:
         go +=1
         if go < tirmax:
@@ -476,7 +454,7 @@ def Test_Partie_2_et3():
            plot_grid (grille3)
         else:
            break
- 
+   
     print ("Grille finale")
     plot_grid (grille3)
     print ("Flotte finale")
@@ -485,166 +463,99 @@ def Test_Partie_2_et3():
  
  
 #Fonctions Partie 4
-   
-#FONCTION: tour_ia_random
-#DESCRIPTION:
-# tire une position au hasard jusqu’a en trouver une qui n’a pas deja
-# ete attaquee  et attaque cette position.
-#ARGUMENTS:
-# m: la grille de jeux
-# flotte: la flotte
-#RETOUR:
-# aucun
- 
+#Partie 4.1
 def tour_ia_random(m,flotte):
-   
     if len(flotte) >0:
-#on recherche au hasard une case VIDE ou une case BATEAU - quand on trouve une on tir
         while True:
             s = random_position ()
             pos=pos_from_string(s)
 #Si le symbole VIDE ou BATEAU est trouvé alors la position n'a pas encore ete touche et on tir
             if m [pos[0]][pos[1]] == VIDE or m [pos[0]][pos[1]] == BATEAU:
                 tir (pos,m,flotte)
-#On sort un fois qu on a tiré
                 break
- 
-#Fonctions Partie 4
-#FONCTION: tour_ia
-#DESCRIPTION:
-# tire une position au hasard
-#ARGUMENTS:
-# m: la grille de jeux
-# flotte: la flotte
-#RETOUR:
-# aucun
+
+#Partie 4.2
+#différence avec la partie 4.1 est qu'ici l'IA peut se tromper et faire des tirs déjà faits
 def tour_ia(m,flotte):
- 
     if len(flotte) >0:
         s = random_position ()
         pos=pos_from_string(s)
         tir (pos,m,flotte)
-      
- 
-#FONCTION: tour_joueur
-#DESCRIPTION:
-#demande a l’utilisateur une position sur laquelle tirer (comme ’c 5’) jusqu’`a ce que l’utilisateur
-#en donne une correcte et qui n’a pas deja ete attaqúee et tire sur cette position.
-#ARGUMENTS:
-# nom: nom du joueur
-# m: la grille
-# flotte: la flotte
-#RETOUR:
-# aucun
+
+
+#Partie 4.3
 def tour_joueur(nom,m,flotte):
- 
     from re import match
     re=r"^[a-j] [0-9]$"
-   
-#boucle while break qd bateau entre correctement evite un appel recursif de la fonction
+#on demande une position de tir et on vérifie la syntaxe
     while True:
         s=str(input("Position: Ecrivez une lettre minuscule entre a et j, puis mettre un espace, puis ecrivez un chiffre entre 0 et 9: "))
-   
+       
         while not match(re,s):
             s=str(input("ERREUR: Ecrivez une lettre minuscule entre a et j, puis mettre un espace, puis ecrivez un chiffre entre 0 et 9: "))
-        
         pos=pos_from_string(s)
-       
+#on vérifie ensuite si le tir a déjà été fait ou non       
         if m [pos[0]][pos[1]] == VIDE or m [pos[0]][pos[1]] == BATEAU:
             tir (pos,m,flotte)
             break
         else:
-            print ("Jouer: ", nom," - tir deja fait ou invalide recommencez s il vous plait")
+            print ("Joueur: ", nom," - tir deja fait ou invalide recommencez s il vous plait")
  
-#FONCTION: tour_ia_better_random
-#DESCRIPTION:
+ 
+#Partie 4.4
 #regarde s’il y a un bateau touch́e et non detruit dans m.
-#S’il y en a une, il tire sur une case adjacente qui n’a pas encore  ete attaqúee, sinon il tire au hasard.
-#ARGUMENTS:
-# m: la grille
-# flotte: la flotte
-#RETOUR:
-#aucun
+#S’il y en a un, il tire sur une case adjacente qui n’a pas encore  ete attaqúee, sinon il tire au hasard.
 def tour_ia_better_random(m,flotte):
-#regarde s il y a un bateau touche et non détruit dans m
-#on initialise bateautrouve a False
-   
     bateautrouve = False
- 
     for x in range(len(m)):
        for y in range(len(m[x])):
-#on recherche une case TOUCHE
            if m[x][y]==TOUCHE:
                 bateautrouve = True
                 pos = (x,y)
                 break
  
-# si bateautrouve est egal a True alors on a trouve un bateau
+# si bateautrouve est egal a True alors on a trouvé un bateau
     if bateautrouve == True:
         print (pos)
-#adjacent liste de coordonnees des caseq adjacenteq autour de x,y plus x,y cela fait 9 coordonnees
-# x-1,y; x+1,y; x,y-1;x,y+1;x-1,y+1;x-1,y-1;x+1,y+1;x+1,y-1
+#adjacent liste de coordonnées des cases adjacentes autour de x,y
+# x-1,y; x+1,y; x,y-1; x,y+1; x-1,y+1; x-1,y-1; x+1,y+1 ;x+1,y-1
         adjacent=  [(pos[0],pos[1]),(pos[0]-1,pos[1]),(pos[0]+1,pos[1]),(pos[0],pos[1]-1),(pos[0],pos[1]+1),(pos[0]-1,pos[1]+1),(pos[0]-1,pos[1]-1),(pos[0]+1,pos[1]+1),(pos[0]+1,pos[1]-1)]
         print (adjacent)
-        for pos in adjacent:
-            if pos[0] in range(0,len(LIGNES)-1) and pos[1] in range(0,len(COLONNES)):
-#on tir que sur les cases qui n ont pas ete touchees
-                if m [pos[0]][pos[1]] == VIDE or m [pos[0]][pos[1]] == BATEAU:
-                    tir (pos,m,flotte)
-                    break;
-#cette partie est pour le cas ou on n a pas trouve de bateau
+        for i in adjacent:
+            if i[0] in range(0,len(LIGNES)-1) and i[1] in range(0,len(COLONNES)):
+#on tire que sur les cases qui n ont pas ete touchées
+                if m [i[0]][i[1]] == VIDE or m [i[0]][i[1]] == BATEAU:
+                    tir (i,m,flotte)
+                    break
+#si on trouve pas de bateau
     else:
-#tir au hasard
            s = random_position ()
            pos=pos_from_string(s)
            tir (pos,m,flotte)
- 
- 
-#FONCTION: test_fin_partie
-#DESCRIPTION:
-#teste si la flotte est vide (ce qui signifie une victoire),
-#affiche qui a gagn e et en combien de tours, puis termine le programme 
-#ARGUMENTS:
-#nom: nom du joueur
-#m: la grille
-#flotte: la flotte
-#nb_tir: nombre de tirs effectues
-#RETOUR:
-#aucun
+
+
+#Partie 4.5
 def test_fin_partie(nom,m,flotte,nb_tir):   
-    if len(flotte) == 0:
+    if len(flotte) == 0:  #si la flotte est vide c'est que la partie est finie
         print("Nom du vainqueur: ",nom," victoire obtenue en :",nb_tir," tirs")
-        #l ordre exit fait terminer le programme
         print ("Grille finale")
         plot_grid (m)
         print (flotte)
         exit ()
- 
- 
-#FONCTION: hide
-#DESCRIPTION:
-#imprime 200 lignes blanches
-#ARGUMENTS:
-#aucun
-#RETOUR:
-#aucun
-#ecrit 200 "\n" pour 'effacer' l'ecran
+
+
+#Partie 4.6
 def hide():
     print("\n" * 200)
+#on imprime juste 200 lignes blanches
  
  
-#FONCTION: plot_grid_hide_bateau
-#DESCRIPTION:
+#Partie 4.7
 #ne precise pas les positions des bateaux sur la grille
 #utile pour un jeu a plusieurs ou les bateaux doivent etre caches
-#ARGUMENTS:
-#m: la grille de jeu
-#RETOUR:
-#aucun
+#rend le jeu plus intéressant car on ne voit pas les bateaux de l'adversaire
 def plot_grid_hide_bateau (m):
-   
-    print("\n  " +  " ".join(COLONNES[x] for x in range(0, N)))   
-    
+    print("\n  " +  " ".join(COLONNES[x] for x in range(0, N)))    
     for x in range(len(m)):
         txt =""
         for y in range(len(m[x])):
@@ -653,7 +564,7 @@ def plot_grid_hide_bateau (m):
             elif m[x][y]==EAU:
                 txt += " "+EAU
             elif m[x][y]==BATEAU:
-                txt += " "+VIDE
+                txt += " "+VIDE  #lorsque on a bateau on met vide à la place pour cacher le bateau sur la grille
             elif m[x][y]==TOUCHE:
                 txt += " "+TOUCHE
             elif m[x][y]==DETRUIT:
@@ -661,145 +572,111 @@ def plot_grid_hide_bateau (m):
         print(LIGNES[x+1] +  txt)
        
     print()
- 
- 
-#FONCTION: joueur_vs_ia
-#DESCRIPTION:
-#match entre un joueur et l ia
-#ARGUMENTS:
-#aucun
-#RETOUR:
-#aucun
+
+
+#Partie 4.8
 def joueur_vs_ia():
 #initialisation
-#Le joeur sur la grille de l 'ia
-#l ia joue sur la grille du joueur
-   
+#Le joueur joue sur la grille de l 'ia
+#l'ia joue sur la grille du joueur
     flotteia=init_joueur_ia()
     gridia=create_grid()
     plot_flotte_grid(gridia,flotteia)
     hide()
     print ("grille et flotte ia initialisees\n")
+    nomjoueur=str(input("entrez votre nom\n"))
     flottejoueur = init_joueur()
     griduser=create_grid()
     plot_flotte_grid(griduser,flottejoueur)
-    print ("grille et flotte joueur initialisees\n")
- 
-    nb_tour_user =0
-    nb_tour_ia =0
-   
-#chaque joueur va jouer alternativement
-#le joueur 1 joue sur la grille du jouer 2
-#le joueur 2 joue sur la grill du joueur 1
-#avant chaque tir on montre sans les bateau l etat de la grille
-#apres chaque tir on montre l effet du tir
-#lors du passage du joueur 1 au joueur 2 la fonction hide() est appelee qui ecrit 200 lignes blanches.
-#a la fin de chaque tir de chaque joueur on teste si toute la flotte ennemi a ete coulee
-#si oui alors on sort du programme et un message est ecrit pour le joueur gagnant avec le nombre de tirs effectues
+    print ("grille et flotte de:",nomjoueur," initialisées\n")
+    nb_tir_user =0
+    nb_tir_ia =0
    
     while True:
-        print("Tour du joueur \n")
+        print("Tour de:",nomjoueur," \n")
         print ("Grille ia avant tir")
         plot_grid_hide_bateau(gridia)
-        tour_joueur("Joueur",gridia,flotteia)
+        tour_joueur(nomjoueur,gridia,flotteia)  #le joueur tir sur la grille et la flotte de l'ia
         print ("Grille ia apres tir")
         plot_grid_hide_bateau(gridia)
-#on incremente les compteur de jeu
-        nb_tour_user =nb_tour_user + 1
-#on test si un des joueurs a coule la flotte de son partenaire
-        test_fin_partie("Joueur",gridia,flotteia,nb_tour_user)
-               
+#on incrémente les compteur de jeu
+        nb_tir_user =nb_tir_user + 1
+#on test si un des joueurs a coulé la flotte de son adversaire avec la fonction test_fin_partie
+        test_fin_partie(nomjoueur,gridia,flotteia,nb_tir_user)   
         input("Tour de l'ia \n Selectionnez n importe qu elle touche pour faire jouer l'ia")
-        hide()
-        print ("Grille Joueur avant tir")
+        hide()  #on imprime 200 lignes blanches et on passe au tour de l'Ia
+        print ("Grille de",nomjoueur," avant tir \n")
         plot_grid_hide_bateau(griduser)
         tour_ia (griduser,flottejoueur)
-        print ("Grille Joueur apres  tir")
+        print ("Grille de:",nomjoueur," apres  tir \n")
         plot_grid_hide_bateau(griduser)
-#on incremente les compteur de jeu
-        nb_tour_ia =nb_tour_ia + 1
-#on test si un des joueurs a coule la flotte de son partenaire
-        test_fin_partie("ia",griduser,flottejoueur,nb_tour_ia)
+        nb_tir_ia =nb_tir_ia + 1
+        test_fin_partie("ia",griduser,flottejoueur,nb_tir_ia)
         input("Entrez n importe quelle touche")
         hide()
+#c'est le exit de la fonction test_fin_partie qui va pouvoir arrêter la boucle en cas de victoire de l'Ia ou du joueur
  
-#FONCTION: joueur_vs_joueur
-#DESCRIPTION:
-#match entre deux joueurs
-#ARGUMENTS:
-#aucun
-#RETOUR:
-#aucun
+#Partie 4.9
 def joueur_vs_joueur():
-#initialisation
-#Le joeur sur la grille de l 'ia
-#l ia joue sur la grille du joueur
     print ("Tour Joueur 1")
+    nomjoueur1=str(input("entrez votre nom \n"))
     flotte1=init_joueur()
     grid1=create_grid()
     plot_flotte_grid(grid1,flotte1)
-    input ("Joueur 1 grille et flotte initialisees - selectionnez n importe quelle touche pour continuer\n")
+    print (nomjoueur1," grille et flotte initialisees - selectionnez n importe quelle touche pour continuer\n")
     hide()
     print ("Tour Joueur 2")
+    nomjoueur2=str(input("entrez votre nom \n"))
     flotte2 = init_joueur()
     grid2=create_grid()
     plot_flotte_grid(grid2,flotte2)
-    input ("Joueur 2 grille et flotte initialisees - selectionnez n importe quelle touche pour continuer\n")
+    print (nomjoueur2," grille et flotte initialisees - selectionnez n importe quelle touche pour continuer\n")
     hide()
-   
-    nb_tour_user1 =0
-    nb_tour_user2 =0
-   
-#chaque joueur va jouer alternativement
-#le joueur 1 joue sur la grille du jouer 2
-#le joueur 2 joue sur la grill du joueur 1
-#avant chaque tir on montre sans les bateau l etat de la grille
-#apres chaque tir on montre l effet du tir
-#lors du passage du joueur 1 au joueur 2 la fonction hide() est appelee qui ecrit 200 lignes blanches.
-#a la fin de chaque tir de chaque joueur on teste si toute la flotte ennemi a ete coulee
-#si oui alors on sort du programme et un message est ecrit pour le joueur gagnant avec le nombre de tirs effectues
-   
+    nb_tir_user1 =0
+    nb_tir_user2 =0
     while True:
-        print("Tour du joueur 1 \n")
-        print ("Grille Joueur 2 avant tir")
+        print("Tour de:",nomjoueur1,"\n")
+        print ("Grille de:",nomjoueur2," avant tir\n")
         plot_grid_hide_bateau(grid2)
-        tour_joueur("Joueur 1",grid2,flotte2)
-        print ("Grille Joueur 2 apres tir")
+        tour_joueur(nomjoueur1,grid2,flotte2)
+        print ("Grille de:",nomjoueur2," apres tir\n")
         plot_grid_hide_bateau(grid2)
-#on incremente les compteur de jeu
-        nb_tour_user1 =nb_tour_user1 + 1
-#on test si un des joueurs a coule la flotte de son partenaire
-        test_fin_partie("Joueur 1",grid2,flotte2,nb_tour_user1)
-       
+        nb_tir_user1 =nb_tir_user1 + 1
+        test_fin_partie(nomjoueur1,grid2,flotte2,nb_tir_user1)
         input("Entrez n importe quelle touche")
         hide()
-       
-        print("Tour du joueur 2 \n")
-        print ("Grille Joueur 1 avant tir")
+        print("Tour de:",nomjoueur2," \n")
+        print ("Grille de:",nomjoueur1," avant tir\n")
         plot_grid_hide_bateau(grid1)
-        tour_joueur ("Joueur 2",grid1,flotte1)
-        print ("Grille Joueur 1 apres tir")
+        tour_joueur (nomjoueur2,grid1,flotte1)
+        print ("Grille de",nomjoueur1," apres tir\n")
         plot_grid_hide_bateau(grid1)
-#on incremente les compteur de jeu
-        nb_tour_user2 =nb_tour_user2 + 1
-#on test si un des joueurs a coule la flotte de son partenaire
-        test_fin_partie("Joueur 2",grid1,flotte1,nb_tour_user2)
-        input("Entrez n importe quelle touche")
+        nb_tir_user2 =nb_tir_user2 + 1
+        test_fin_partie(nomjoueur2,grid1,flotte1,nb_tir_user2)
+        input("Entrez n'importe quelle touche")
         hide()
- 
+
+
+#Partie 4.10
+def choix_joueur():
+    while True:
+        print("Choisissez votre mode de jeu:\n")
+        print(" 0- si vous voulez jouer en solo \n")
+        print(" 1- si vous voulez jouer à deux \n")
+        print(" -1- pour quitter le menu \n")
+        schoix1 = int(input("saisissez votre choix: "))
+        if schoix1==0:
+            joueur_vs_ia()
+        elif schoix1==1:
+            joueur_vs_joueur()
+        elif schoix1==-1:
+            break
+        else:
+            print("mauvais choix veuillez recommencer: \n")
+
+
 #FONCTION: Test_Partie_4a
-#DESCRIPTION:
-#fonction testant la partie 4: tout est automatise test la fonction tour_ia_random
-#fait appel aux fonction ia:
-#init_joueur_ia
-#tour_ia_random
-#ARGUMENTS:
-#aucun
-#RETOUR:
-#aucun
- 
 def Test_Partie_4a():
-    
     print ("Debut tests partie 4a\n")
     print ("Test de la fonction tour_ia_random\n")
     nom = "IA"
@@ -808,9 +685,7 @@ def Test_Partie_4a():
     flotte_ia = init_joueur_ia()
     print (flotte_ia)
     plot_flotte_grid(grille4,flotte_ia)
-   
     gotir = int(input("Entrez le nombre de tirs maximum a faire: "))
-   
     nb_tir =0
     while True:
         nb_tir +=1
@@ -828,23 +703,11 @@ def Test_Partie_4a():
             print ("\nNombre maximum de tirs atteint sans couler toute la flotte\n")
             print ("Nombre de bateaux restant: ",len(flotte_ia))
             break
-   
     print ("Fin tests partie 4a\n")
- 
- 
- 
-#FONCTION: Test_Partie_4a
-#DESCRIPTION:
-#fonction testant la partie 4: tout est automatise test la fonction tour_ia_better_random
-#fait appel aux fonction ia:
-#init_joueur_ia
-#tour_ia_better_random
-#ARGUMENTS:
-#aucun
-#RETOUR:
-#aucun
+
+
+#FONCTION: Test_Partie_4b
 def Test_Partie_4b():
-    
     print ("Debut tests partie 4a\n")
     print ("Test de la fonction tour_ia_better_random\n")
     nom = "IA"
@@ -853,7 +716,6 @@ def Test_Partie_4b():
     flotte_ia = init_joueur_ia()
     print (flotte_ia)
     plot_flotte_grid(grille4,flotte_ia)
-   
     nb_tour =0
     while True:
         nb_tour +=1
@@ -863,32 +725,26 @@ def Test_Partie_4b():
             plot_grid (grille4)                                            
         else:
            break
-   
     print ("Fin tests parties 4a\n")
  
  
 def Test_Partie_4():
-   
+    #on créé un menu a l'intérieur de la fonction test pour demander à l'utilisateur
+    #quelle fonction de la partie 4 il veut tester
     print ("Choisissez la partie que vous voulez tester:\n")
     print ("    0 - Test la fonction tour_ia_random\n")
     print ("    1 - Test la fonction tour_ia_better_random\n")
-    print ("    2 - Test joueur_vs_ia\n")
-    print ("    3 - Test joueur_vs_Joueur\n")
+    print ("    2 - Choisir une partie\n")
     print ("\n un autre choix quitte le programme\n")
-   
     schoix = str(input("saisissez votre choix: "))
-   
     if schoix.isdigit():
         choix = int(schoix)
- 
         if choix == 0:
             Test_Partie_4a()
         elif choix == 1:
             Test_Partie_4b()           
         elif choix == 2:
-            joueur_vs_ia()
-        elif choix == 3:
-            joueur_vs_joueur()
+            choix_joueur()
         else:
             print ("Fin du choix")
             exit()
@@ -898,43 +754,20 @@ def Test_Partie_4():
  
  
 #Fonctions PARTIE 5
-#FONCTION: tour_boulet_de_canon
-#DESCRIPTION:
-#regarde s’il y a un bateau touch́e et non detruit dans m.
-#S’il y en a une, il tire sur une case adjacente qui n’a pas encore  ete attaqúee, sinon il tire au hasard.
-#ARGUMENTS:
-#pos: position de tir autour de laquelle les positions adjacentes seront determinees
-#m la grille
-#flotte l flotte
-#RETOUR:
-#aucun
-   
+#Partie 5.1   
 def tour_boulet_de_canon(pos,m,flotte):
-#
-#adjacent liste de coordonnees adjacente a pos
-#case adjacente autour de x,y sont definies par les coordonnees suvantes
-# x-1,y; x+1,y; x,y-1;x,y+1;x-1,y+1;x-1,y-1;x+1,y+1;x+1,y-1
-        adjacent=  {(pos[0]-1,pos[1]),(pos[0]+1,pos[1]),(pos[0],pos[1]-1),(pos[0],pos[1]+1),(pos[0]-1,pos[1]+1),(pos[0]-1,pos[1]-1),(pos[0]+1,pos[1]+1),(pos[0]+1,pos[1]-1)}
-        for pos in adjacent:
-            if pos[0] in range(0,len(LIGNES)-1) and pos[1] in range(0,len(COLONNES)):   
-                tir (pos,m,flotte)
+#case adjacente autour de x,y sont definies par les coordonnees suivantes
+# x-1,y; x+1,y; x,y-1 ;x,y+1; x-1,y+1; x-1,y-1; x+1,y+1; x+1,y-1
+        adjacent=  [(pos[0]-1,pos[1]),(pos[0]+1,pos[1]),(pos[0],pos[1]-1),(pos[0],pos[1]+1),(pos[0]-1,pos[1]+1),(pos[0]-1,pos[1]-1),(pos[0]+1,pos[1]+1),(pos[0]+1,pos[1]-1)]
+        for adj in adjacent:
+            if adj[0] in range(0,len(LIGNES)-1) and adj[1] in range(0,len(COLONNES)):   
+                tir (adj,m,flotte)
  
    
-#FONCTION: tour_ia_even_better_random
-#DESCRIPTION:
-#cette fonction combine le principe de la fonction  tour_ia_even_better_random et boulet de canon 
-#regarde s’il y a un bateau touch́e et non detruit dans m.
-#S’il y en a un, il tire sur toutes les case adjacentes (y compris la case de reference) qui n’ont pas encore  ete attaqúees donc il y a 9 tirs
-#sinon il tire sur une position au hasard.
-#ARGUMENTS:
-#m: la grille
-#flotte: la flotte
-#RETOUR:
-#aucun
+#Partie 5.2
 def tour_ia_even_better_random(m,flotte):
-#regarde s il y a un bateau touche et non détruit dans m
+#regarde s il y a un bateau touché et non détruit dans m
     bateautrouve = False
-#global dit a Python de garder la valeur de pos pour pouvoir la reutiliser qd on rentre de nouveau dans la fonction
     for x in range(len(m)):
        for y in range(len(m[x])):
            if m[x][y]==TOUCHE:
@@ -944,14 +777,12 @@ def tour_ia_even_better_random(m,flotte):
            
     if bateautrouve:
         print (pos)
-#adjacent liste de coordonnees des caseq adjacenteq autour de x,y plus x,y cela fait 9 coordonnees
-# x-1,y; x+1,y; x,y-1;x,y+1;x-1,y+1;x-1,y-1;x+1,y+1;x+1,y-1
-        adjacent=  {(pos[0],pos[1]),(pos[0]-1,pos[1]),(pos[0]+1,pos[1]),(pos[0],pos[1]-1),(pos[0],pos[1]+1),(pos[0]-1,pos[1]+1),(pos[0]-1,pos[1]-1),(pos[0]+1,pos[1]+1),(pos[0]+1,pos[1]-1)}
+        adjacent=  [(pos[0],pos[1]),(pos[0]-1,pos[1]),(pos[0]+1,pos[1]),(pos[0],pos[1]-1),(pos[0],pos[1]+1),(pos[0]-1,pos[1]+1),(pos[0]-1,pos[1]-1),(pos[0]+1,pos[1]+1),(pos[0]+1,pos[1]-1)]
         print (adjacent)
-        for pos in adjacent:
-            if pos[0] in range(0,len(LIGNES)-1) and pos[1] in range(0,len(COLONNES)):   
-                if m [pos[0]][pos[1]] == VIDE or m [pos[0]][pos[1]] == BATEAU:
-                    tir (pos,m,flotte)
+        for adj in adjacent:
+            if adj[0] in range(0,len(LIGNES)-1) and adj[1] in range(0,len(COLONNES)):   
+                if m [adj[0]][adj[1]] == VIDE or m [adj[0]][adj[1]] == BATEAU:
+                    tir (adj,m,flotte)
     else:
 #tir au hasard
            s = random_position ()
@@ -959,24 +790,13 @@ def tour_ia_even_better_random(m,flotte):
            tir (pos,m,flotte)
           
  
-#FONCTION: presence_bateau_avec_case_adjacente
-#DESCRIPTION:
-# Fonction qui indique si un bateau est positionne sur une position adjacente a pos
-# Par exemple Un bateau ne pourra pas occuper une case qui colle a un autre bateau
-#ARGUMENTS:
-# pos: la position initiale du bateau
-# flotte: la flotte deja existente
-#RETOUR:
-# True: il y a deja un bateau pour cette position ou un bateau est adjacent a cette position
-# False: il n y a pas de bateau a cette position ni sur une position adjacente
+#Partie 5.3
 def presence_bateau_avec_case_adjacente(pos,flotte):
 #construction de la liste des positions adjacentes a la position pos
 #cette liste inclue la position pos, cette liste a 9 éléments.
-    adjacent=  {(pos[0],pos[1]),(pos[0]-1,pos[1]),(pos[0]+1,pos[1]),(pos[0],pos[1]-1),(pos[0],pos[1]+1),(pos[0]-1,pos[1]+1),(pos[0]-1,pos[1]-1),(pos[0]+1,pos[1]+1),(pos[0]+1,pos[1]-1)}
+    adjacent=  [(pos[0],pos[1]),(pos[0]-1,pos[1]),(pos[0]+1,pos[1]),(pos[0],pos[1]-1),(pos[0],pos[1]+1),(pos[0]-1,pos[1]+1),(pos[0]-1,pos[1]-1),(pos[0]+1,pos[1]+1),(pos[0]+1,pos[1]-1)]
     print (adjacent)
-#la boucle for passe en revue tous les bateaux
     for bateau in flotte:
-#la boucle for passe en revue pour chaque bateau toutes les valeurs de positions (champs positions)
         for batpos in bateau["positions"]:
             #alors on regarde si sur une case adjacente a pos il n y a pas de bateau
 #boucle sur la liste des positions adjacente et verification avec une des positions occupees par le bateau
@@ -986,15 +806,9 @@ def presence_bateau_avec_case_adjacente(pos,flotte):
                         return True
  
     return False
- 
+
+
 #FONCTION: Test_Partie_5_boulet_de_canon
-#DESCRIPTION:
-#teste la fonctionalite boulet de canon
-#teste de la fin de partie
-#ARGUMENTS:
-#aucun
-#RETOUR:
-#aucun
 def Test_Partie_5_boulet_de_canon():
     print ("Debut tests partie 5\n")
     print ("Test de la fonction boulet de canonn")
@@ -1012,27 +826,22 @@ def Test_Partie_5_boulet_de_canon():
 # nombre de coups total max 200
 # une fois et une seule dans la partie le boulet de canon est lance
 # pour ici il sera lance au hasard pour cela on tire un chiffre au hasard entre 0 et 10
-# et si c est egal a 5 et qu il  a  pas ete lance on le lance sinon on utilise
+# et si c'est égale a 5 et qu'il  a  pas été lancé on le lance sinon on utilise
 # la fonction tour_ia_better_random
        
         if nb_tour < 200:
-           
             s = random.randint (0,10)
-           
             if bouletlance == False and s == 5:
                 print ("tour_boulet_de_canon")
                 s = random_position ()
                 pos=pos_from_string(s)
                 tour_boulet_de_canon(pos,grille4,flotte_ia)
                 bouletlance = True
-               
             else: 
                 print ("tour_ia_random")
                 tour_ia_random(grille4,flotte_ia)
-               
             test_fin_partie(nom,grille4,flotte_ia,nb_tour)
-            plot_grid (grille4)
-                                                              
+            plot_grid (grille4)                                                     
         else:
            break
        
@@ -1041,11 +850,6 @@ def Test_Partie_5_boulet_de_canon():
     print ("Fin tests partie 5\n")   
  
 #FONCTION: Test_Partie_5_better_random
-#DESCRIPTION:
-#ARGUMENTS:
-#aucun
-#RETOUR:
-#aucun
 def Test_Partie_5_better_random():
     print ("Debut tests parties 5\n")
     print ("Test de la fonction boulet de canonn")
@@ -1056,36 +860,24 @@ def Test_Partie_5_better_random():
     print (flotte_ia)
     plot_flotte_grid(grille4,flotte_ia)
     nb_tour =0
-#bouletlance test si le boulet a ete lance au debut c est False une fois lance la valeur devient True
+#bouletlance test si le boulet a ete lancé au debut c'est False une fois lancée la valeur devient True
     bouletlance = False
    
     while True:
         nb_tour +=1
-# nombre de coups total max 200
-# une fois dans la partie le boulet de canon est lance
-# pour ici il sera lance au hasard pour cela on tire un chiffre au hasard entre 0 et 10
-# et si c est egal a 5 et qu il  a  pas ete lance on le lance sinon on utilise
-# une fois lance il ne sera plus lance
-# la fonction tour_ia_better_random
-       
         if nb_tour < 200:
-           
             s = random.randint (0,10)
-           
             if bouletlance == False and s == 5:
                 print ("tour_boulet_de_canon")
                 s = random_position ()
                 pos=pos_from_string(s)
-                tour_boulet_de_canon(pos,grille4,flotte_ia)
+                tour_ia_better_random(grille4,flotte_ia)
                 bouletlance = True
-               
             else: 
                 print ("tour_ia_better_random")
-                tour_ia_better_random(grille4,flotte_ia)
-               
+                tour_ia_random(grille4,flotte_ia) 
             test_fin_partie(nom,grille4,flotte_ia,nb_tour)
-            plot_grid (grille4)
-                                                              
+            plot_grid (grille4)                                                     
         else:
            break
        
@@ -1093,37 +885,28 @@ def Test_Partie_5_better_random():
    
     print ("Fin tests partie 5\n")
  
- 
+
+
 #FONCTION: Test_Partie_5_position_adjacente
-#DESCRIPTION:
-#test si une case est adjacente a une bateau
-#ARGUMENTS:
-#aucun
-#RETOUR:
-#aucun
 def Test_Partie_5_position_adjacente():
     from re import match
     re=r"^[a-j] [0-9]$"
 #on cree une nouvelle flotte
     flotte=[]
 #on ajoute un bateau
-    nouveau_bateau(flotte,"Daron",3,(5,4),"v")
-    nouveau_bateau(flotte,"Test",3,(5,0),'h')
-    nouveau_bateau(flotte,"Vogues Merry",3,(0,0),"h")
+    nouveau_bateau(flotte,"Gon",3,(5,4),"v")
+    nouveau_bateau(flotte,"Killua",3,(5,0),'h')
+    nouveau_bateau(flotte,"Kurapika",3,(0,0),"h")
     print ("flotte:\n",flotte)
     grille=create_grid()
     plot_flotte_grid(grille,flotte)
    
     while True:
         s=str(input("Position: une lettre minuscule entre a et j suivi d'un espace, puis un chiffre entre 0 et 9 ('q' pour sortir): "))
-       
-        if s.upper() != "Q":
-           
+        if s.upper() != "Q":  #si on décide de continuer
             while not match(re,s):
                 s=str(input("ERREUR: Ecrivez une lettre minuscule entre a et j, puis mettre un espace, puis ecrivez un chiffre entre 0 et 9: "))
-            
             pos=pos_from_string(s)
-           
             if presence_bateau_avec_case_adjacente(pos,flotte):
                 print("\nUn bateau est present sur la position ou une position adjacent\n")
             else:
@@ -1133,25 +916,15 @@ def Test_Partie_5_position_adjacente():
        
     
 #FONCTION: Test_Partie_5
-#DESCRIPTION:
-#menu qui permettent de choisir les fonctions de la partie 5 a tester
-#ARGUMENTS:
-#aucun
-#RETOUR:
-#aucun
 def Test_Partie_5():
-   
     print ("Choisissez la partie que vous voulez tester:\n")
     print ("    0 - Test la fonction boulet de canon\n")
     print ("    1 - Test la fonction tour_ia_even_better_random (combinaison boulet de canon et random)\n")
     print ("    2 - Test de la presence bateau sur position adjacente\n")
     print ("\n un autre choix quitte le programme\n")
-   
     schoix = str(input("saisissez votre choix: "))
-   
     if schoix.isdigit():
         choix = int(schoix)
- 
         if choix == 0:
             Test_Partie_5_boulet_de_canon()
         elif choix == 1:
@@ -1160,30 +933,22 @@ def Test_Partie_5():
             Test_Partie_5_position_adjacente()
         else:
             print ("Fin du choix")
-            exit()
-       
+            exit() 
     else:
         print ("choix non valide recommencez\n")
  
  
-#
-#Program
-#
- 
+#Menu du programme demande à l'utilisateur quelle partie du projet il veut tester
 while True:
-   
     print ("Choisissez la partie que vous voulez tester:\n")
     print ("    0 - Function de la partie 1\n")
     print ("    1 - Function de la partie 2 et 3\n")
     print ("    2 - Function de la partie 4\n")
     print ("    3 - Function de la partie 5\n")
     print ("\n un autre choix quitte le programme\n")
-   
     schoix = str(input("saisissez votre choix: "))
-   
     if schoix.isdigit():
         choix = int(schoix)
- 
         if choix == 0:
             Test_Partie_1()
         elif choix == 1:
@@ -1194,7 +959,6 @@ while True:
             Test_Partie_5()
         else:
             print ("Fin du programme")
-            exit()
-       
+            exit() 
     else:
         print ("choix non valide recommencez\n")
