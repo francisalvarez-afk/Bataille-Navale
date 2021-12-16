@@ -1,3 +1,10 @@
+#Samuel Alvarez
+#Louis Bibal
+#
+#Projet Baraille Navale
+#L2 MIASH Panthéon Sorbonne
+#
+
 import random
  
 #Constantes projet
@@ -80,9 +87,7 @@ def random_position ():
  
  
 #Partie 1.6
-def pos_from_string(s):
-#initialisation de pos en tant que tuple vide
-    pos = tuple()  
+def pos_from_string(s):  
    
     if len(s)==3:  #3 car on a une lettre un espace et un chiffre
         s=s.split()
@@ -94,8 +99,14 @@ def pos_from_string(s):
            # la différence entre le code ascii de s[0] et 97 donnera le premier élément du tuple
            pos=(NLettre,Nombre)
         else:
+           #initialisation de pos en tant que tuple vide
+           pos = tuple()
            print ("Format invalide veuillez saisir une autre position: ",s)
            print ("Position: Ecrivez une lettre minuscule entre a et j, puis mettre un espace, puis ecrivez un chiffre entre 0 et 9")
+    else:
+        pos = tuple()
+        print ("Format invalide veuillez saisir une autre position: ",s)
+        print ("Position: Ecrivez une lettre minuscule entre a et j, puis mettre un espace, puis ecrivez un chiffre entre 0 et 9")
  
     return pos
  
