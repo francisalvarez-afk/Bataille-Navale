@@ -559,16 +559,11 @@ def plot_grid_hide_bateau (m):
     for x in range(len(m)):
         txt =""
         for y in range(len(m[x])):
-            if m[x][y]==VIDE:
-                txt += " "+VIDE
-            elif m[x][y]==EAU:
-                txt += " "+EAU
-            elif m[x][y]==BATEAU:
+            if m[x][y]==BATEAU:
                 txt += " "+VIDE  #lorsque on a bateau on met vide à la place pour cacher le bateau sur la grille
-            elif m[x][y]==TOUCHE:
-                txt += " "+TOUCHE
-            elif m[x][y]==DETRUIT:
-                txt += " "+DETRUIT
+            else:
+                txt += " "+m[x][y]
+        
         print(LIGNES[x+1] +  txt)
        
     print()
