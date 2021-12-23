@@ -565,7 +565,6 @@ def plot_grid_hide_bateau (m):
                 txt += " "+m[x][y]
         
         print(LIGNES[x+1] +  txt)
-       
     print()
 
 
