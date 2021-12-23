@@ -5,6 +5,7 @@
 #L2 MIASHS Panthéon Sorbonne
  
 import random
+import pygame
 
 #Constantes projet
 #dimension du plateau de jeu NxN
@@ -27,7 +28,25 @@ NOMS=['Transporteur','Cuirasse','Croiseur','Sous-marin','Destructeur']
 #Nombre de cases occupées respectivement au nom des bateaux
 TAILLES=[5,4,3,3,2]
  
+#init de pygame 
+pygame.init()
+eau_effect = pygame.mixer.Sound("D:\\L2 Python\\Bataille Navale\\Plouf_1.mp3")
+touche_effect=  pygame.mixer.Sound("D:\\L2 Python\\Bataille Navale\\explosion_courte.mp3")
+detruit_effect=  pygame.mixer.Sound("D:\\L2 Python\\Bataille Navale\\detruit.mp3")
+victoire_effet = pygame.mixer.Sound("D:\\L2 Python\\Bataille Navale\\foule_joie.mp3")
  
+def SoundManque():
+    eau_effect.play()   # le son est joué
+
+def SoundTouche():
+    touche_effect.play()   # le son est joué
+    
+def SoundDetruit():
+    detruit_effect.play()    # le son est joué
+    
+def SoundVictoire():
+    victoire_effect.play()   #  le son est joué
+    
 #Fonctions Partie 1
  
 #Partie 1.1
@@ -60,6 +79,7 @@ def tir_basique(m,pos):
             if m [pos[0]][pos[1]] != EAU:
                m [pos[0]][pos[1]] = EAU
                print ("Tir nouveau")
+               SoundManque()
                return True
             else:
 #sinon c'est un tir deja fait
@@ -313,9 +333,11 @@ def tir (pos,m,flotte):
             print ("MANQUE !")
             m [pos[0]][pos[1]] = EAU
             tirstatus = True
+            SoundManque()
         elif m [pos[0]][pos[1]] == BATEAU and presence_bateau(pos,flotte) == True:
             print ("TOUCHE !")
             m [pos[0]][pos[1]] = TOUCHE
+            SoundTouche()
 #on recherche le rang du  bateau grace à la fonction id_bateau...
             index = id_bateau_at_pos(pos,flotte)
             tirstatus = True  #le tir a été effectué
@@ -332,6 +354,7 @@ def tir (pos,m,flotte):
                        #controle de la validite de inpos [0] et inpos [1] pour ne pas sortir de m
                        if inpos [0] >=0 and inpos [0] <= (N-1) and inpos [1] >=0 and inpos [1] <= (N-1):
                            m[inpos [0]][inpos [1]]=DETRUIT  #on remplace le bateau par DETRUIT
+                           SoundDetruit()
             #on retire le bateau de la flotte
 #on verra par la suite que si on a retiré tous les bateaux de la flotte i.e len(flotte)==0
 #alors la partie est finis car l'une des flottes a été totalement détruite
@@ -353,8 +376,8 @@ def id_bateau_at_pos(pos,flotte):
    rang = 0
    for bateau in flotte:
        for inpos in bateau["positions"]:
-        if pos[0] == inpos [0] and pos[1] == inpos [1]:
-           return rang
+            if pos[0] == inpos [0] and pos[1] == inpos [1]:
+               return rang
        rang = rang + 1
    return None
 
@@ -541,6 +564,7 @@ def test_fin_partie(nom,m,flotte,nb_tir):
         print ("Grille finale")
         plot_grid (m)
         print (flotte)
+        SoundVictoire()
         exit ()
 
 
